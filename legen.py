@@ -11,7 +11,29 @@ from utils import time_task, audio_extensions, video_extensions, check_other_ext
 
 version = "v0.18.1"
 
-# ... (ASCII art and prints, unchanged) ...
+# Terminal colors
+default = "\033[1;0m"
+gray = "\033[1;37m"
+wblue = "\033[1;36m"
+blue = "\033[1;34m"
+yellow = "\033[1;33m"
+green = "\033[1;32m"
+red = "\033[1;31m"
+
+print(f"""
+{blue}888              {gray} .d8888b.                   
+{blue}888              {gray}d88P  Y88b                  
+{blue}888              {gray}888    888                  
+{blue}888      .d88b.  {gray}888         .d88b.  88888b. 
+{blue}888     d8P  Y8b {gray}888  88888 d8P  Y8b 888 "88b
+{blue}888     88888888 {gray}888    888 88888888 888  888
+{blue}888     Y8b.     {gray}Y88b  d88P Y8b.     888  888
+{blue}88888888 "Y8888  {gray} "Y8888P88  "Y8888  888  888
+
+legen {version} - github.com/matheusbach/legen{default}
+python {__import__('sys').version}
+""")
+time.sleep(1.5)
 
 parser = argparse.ArgumentParser(prog="LeGen", description="Batch video/audio encoder using ffmpeg.",
                                  argument_default=True, allow_abbrev=True, add_help=True)
@@ -42,14 +64,13 @@ def encode_one(path, rel_path, output_dir, overwrite):
         ffmpeg_utils.encode_media(origin_media_path, output_path)
     except Exception as e:
         file = path.as_posix()
-        print(f"ERROR !!! {file}")
+        print(f"{red}ERROR !!!{default} {file}")
         current_time = time.strftime("%y/%m/%d %H:%M:%S", time.localtime())
         error_message = f"[{current_time}] {file}: {type(e).__name__}: {str(e)}"
         with open(Path(Path(getframeinfo(currentframe()).filename).resolve().parent, "legen-errors.txt"), "a") as f:
             f.write(error_message + "\n")
 
 with time_task(message="⌛ Processing files for"):
-    # Collect tasks
     tasks = []
     for path in (item for item in sorted(sorted(Path(args.input_path).rglob('*'), key=lambda x: x.stat().st_mtime), key=lambda x: len(x.parts)) if item.is_file()):
         rel_path = path.relative_to(args.input_path)
@@ -60,10 +81,9 @@ with time_task(message="⌛ Processing files for"):
             output_file_path.parent.mkdir(parents=True, exist_ok=True)
             file_utils.copy_file_if_different(path, output_file_path)
 
-    # Parallel encode
     with ProcessPoolExecutor(max_workers=args.max_workers) as executor:
         futures = [executor.submit(encode_one, *task) for task in tasks]
         for f in as_completed(futures):
             pass
 
-    print("Tasks done!")
+    print(f"{green}Tasks done!{default}")
