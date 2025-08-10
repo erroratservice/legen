@@ -9,9 +9,9 @@ def encode_media(input_media_path: Path, output_media_path: Path):
     "-c:v", "hevc_nvenc",
     "-preset", "p7",
     "-rc", "constqp",
-    "-cq", "19",
-    "-profile:v", "main10",
-    "-pix_fmt", "p010le",
+    "-cq", "23",
+    "-profile:v", "main",        # <--- 8-bit profile
+    "-pix_fmt", "yuv420p",       # <--- 8-bit pixel format
     "-c:a", "aac",
     "-b:a", "128k",
     "-movflags", "+faststart",
