@@ -43,6 +43,8 @@ parser.add_argument("-i", "--input_path",
                     help="Path to media files. Can be a folder containing files or an individual file", required=True, type=Path)
 parser.add_argument("-c:v", "--codec_video", type=str, default="h264", metavar="VIDEO_CODEC",
                     help="Target video codec. Ex: h264, libx264, h264_vaapi, h264_nvenc, hevc, etc.")
+parser.add_argument("--video_hardware_api", type=str, default="auto", metavar="VIDEO_HW_API",
+                    help="Video hardware acceleration API. Options: auto, none, nvenc, vaapi, amf, v4l2m2m, qsv, videotoolbox, cuvid.")
 parser.add_argument("-c:a", "--codec_audio", type=str, default="aac", metavar="AUDIO_CODEC",
                     help="Target audio codec. (default: aac). Ex: aac, libopus, mp3, vorbis")
 parser.add_argument("-o", "--output_dir", default=None, type=Path,
@@ -86,7 +88,8 @@ with time_task(message="⌛ Processing files for"):
                             input_media_path=origin_media_path,
                             output_media_path=output_path,
                             codec_video=args.codec_video if file_type == "video" else None,
-                            codec_audio=args.codec_audio
+                            codec_audio=args.codec_audio,
+                            video_hardware_api=args.video_hardware_api if file_type == "video" else None
                         )
                 else:
                     print("Not a video or audio file")
