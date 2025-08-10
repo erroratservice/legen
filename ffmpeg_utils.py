@@ -5,19 +5,19 @@ from tqdm import tqdm
 
 def encode_media(input_media_path: Path, output_media_path: Path):
     cmd = [
-        "ffmpeg", "-y", "-i", str(input_media_path),
-        "-c:v", "hevc_nvenc",
-        "-preset", "p7",
-        "-rc", "vbr_hq",
-        "-cq", "19",
-        "-b:v", "0",
-        "-profile:v", "main10",
-        "-pix_fmt", "yuv420p10le",
-        "-c:a", "aac",
-        "-b:a", "128k",
-        "-movflags", "+faststart",
-        str(output_media_path)
-    ]
+    "ffmpeg", "-y", "-i", str(input_media_path),
+    "-c:v", "hevc_nvenc",
+    "-preset", "p7",
+    "-rc", "vbr",
+    "-b:v", "3000k",  # or your desired bitrate
+    "-maxrate", "4000k",
+    "-profile:v", "main10",
+    "-pix_fmt", "p010le",
+    "-c:a", "aac",
+    "-b:a", "128k",
+    "-movflags", "+faststart",
+    str(output_media_path)
+]
     print("Running:", " ".join(cmd))
     try:
         ff = FfmpegProgress(cmd)
