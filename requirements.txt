@@ -1,10 +1,4 @@
-deep_translator
 ffmpeg_progress_yield
-openai_whisper
-pysrt
 torch
 tqdm
-whisper
 vidqa
-git+https://github.com/matheusbach/whisperx.git
-gemini-srt-translator
