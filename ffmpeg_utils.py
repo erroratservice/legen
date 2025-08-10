@@ -8,9 +8,8 @@ def encode_media(input_media_path: Path, output_media_path: Path):
     "ffmpeg", "-y", "-i", str(input_media_path),
     "-c:v", "hevc_nvenc",
     "-preset", "p7",
-    "-rc", "vbr",
-    "-b:v", "3000k",  # or your desired bitrate
-    "-maxrate", "4000k",
+    "-rc", "constqp",
+    "-cq", "19",
     "-profile:v", "main10",
     "-pix_fmt", "p010le",
     "-c:a", "aac",
